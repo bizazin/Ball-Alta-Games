@@ -2,7 +2,7 @@
 using Scripts.Behaviours.Impls;
 using Scripts.Databases.Projectile;
 using Scripts.Databases.Projectile.Impls;
-using Scripts.ObjectPooling.Objects.Impls;
+using Scripts.ObjectPooling.Objects;
 using Scripts.ObjectPooling.Pools;
 using Scripts.ObjectPooling.Pools.Impls;
 using UnityEngine;
@@ -38,7 +38,7 @@ namespace Scripts.Installers.Main
         private void BindObjectPools()
         {
             BindPool<ProjectileBehaviour, ProjectilePool, IProjectilePool>(projectileBehaviour);
-            BindPool<EnemyBehaviour, EnemyPool, IEnemyPool>(enemyBehaviour);
+            BindPool<EnemyBehaviour, EnemyPool, IEnemyPool>(enemyBehaviour, 150);
         }
 
         private void BindPrefabs()
@@ -49,7 +49,7 @@ namespace Scripts.Installers.Main
             BindPrefab(mainSceneView, parent);
         }
 
-        private void BindPool<TItemContract, TPoolConcrete, TPoolContract>(TItemContract prefab, int size = 150)
+        private void BindPool<TItemContract, TPoolConcrete, TPoolContract>(TItemContract prefab, int size = 1)
             where TItemContract : MonoBehaviour
             where TPoolConcrete : TPoolContract, IMemoryPool
             where TPoolContract : IMemoryPool

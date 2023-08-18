@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: EnemySettingsDatabase
   m_EditorClassIdentifier: 
   enemySettings:
-    EnemiesCount: 100
-    CircleRadius: 10
+    EnemiesCount: 120
+    CircleRadius: 12
     MinEnemySpacing: 1.5

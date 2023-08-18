@@ -1,4 +1,5 @@
 ﻿using Scripts.Controllers;
+using Scripts.Services.ProjectileTimeout.Impls;
 using Zenject;
 
 namespace Scripts.Installers.Main
@@ -7,12 +8,12 @@ namespace Scripts.Installers.Main
     {
         public override void InstallBindings()
         {
-            BindControllers();
-        }
-
-        private void BindControllers()
-        {
+            //Controllers
             Container.BindInterfacesTo<MainSceneController>().AsSingle();
+
+            //Services
+            Container.BindInterfacesTo<ProjectileTimeoutService>().AsSingle();
+
         }
     }
 }

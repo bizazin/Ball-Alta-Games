@@ -1,5 +1,5 @@
-﻿using Scripts.ObjectPooling.Objects.Impls;
-using Services.SceneLoading.Impls;
+﻿using Scripts.Behaviours.Impls;
+using Scripts.Services.SceneLoading.Impls;
 using UnityEngine;
 using Zenject;
 
@@ -30,12 +30,14 @@ namespace Installers.Project
         }
 
         private void BindPrefab<TContent>(TContent prefab, Transform parent)
-            where TContent : Object =>
+            where TContent : MonoBehaviour
+        {
             Container.BindInterfacesAndSelfTo<TContent>()
                 .FromComponentInNewPrefab(prefab)
 #if UNITY_EDITOR
                 .UnderTransform(parent)
 #endif
                 .AsSingle();
+        }
     }
 }

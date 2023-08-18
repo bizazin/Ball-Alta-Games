@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections;
-using Scripts.ObjectPooling.Objects;
+using Scripts.Behaviours;
 using UnityEngine.SceneManagement;
 
-namespace Services.SceneLoading.Impls
+namespace Scripts.Services.SceneLoading.Impls
 {
     public class SceneLoadingService : ISceneLoadingService
     {

@@ -13,5 +13,7 @@ MonoBehaviour:
   m_Name: ProjectileSettingsDatabase
   m_EditorClassIdentifier: 
   projectileSettings:
-    GrowRate: 0.1
-    LaunchForce: 10
+    GrowRate: 0.2
+    LaunchForce: 15
+    InfectRadiusMultiplier: 2
+    ProjectileTimeoutDurationS: 3

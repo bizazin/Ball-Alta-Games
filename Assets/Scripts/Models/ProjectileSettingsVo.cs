@@ -7,5 +7,7 @@ namespace Scripts.Models
     {
         public float GrowRate;
         public float LaunchForce;
+        public float InfectRadiusMultiplier;
+        public int ProjectileTimeoutDurationS;
     }
 }

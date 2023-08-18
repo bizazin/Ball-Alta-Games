@@ -1,6 +1,6 @@
 using System;
 
-namespace Services.SceneLoading
+namespace Scripts.Services.SceneLoading
 {
     public interface ISceneLoadingService
     {

@@ -2,7 +2,7 @@
 
 namespace Scripts.Ecs.Common.Components.Flags
 {
-    [Projectile]
+    [Projectile, Player]
     public class DestroyedComponent : IComponent
     {
     }
