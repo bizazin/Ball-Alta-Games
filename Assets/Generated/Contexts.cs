@@ -21,12 +21,14 @@ public partial class Contexts : Entitas.IContexts {
 
     static Contexts _sharedInstance;
 
+    public CommonContext common { get; set; }
+    public ProjectileContext projectile { get; set; }
 
-
-    public Entitas.IContext[] allContexts { get { return new Entitas.IContext [] {  }; } }
+    public Entitas.IContext[] allContexts { get { return new Entitas.IContext [] { common, projectile }; } }
 
     public Contexts() {
-
+        common = new CommonContext();
+        projectile = new ProjectileContext();
 
         var postConstructors = System.Linq.Enumerable.Where(
             GetType().GetMethods(),
@@ -61,7 +63,8 @@ public partial class Contexts {
     [Entitas.CodeGeneration.Attributes.PostConstructor]
     public void InitializeContextObservers() {
         try {
-
+            CreateContextObserver(common);
+            CreateContextObserver(projectile);
         } catch(System.Exception) {
         }
     }

@@ -1,4 +1,4 @@
-﻿using Behaviours.Impls;
+﻿using Scripts.ObjectPooling.Objects.Impls;
 using Services.SceneLoading.Impls;
 using UnityEngine;
 using Zenject;
@@ -7,7 +7,7 @@ namespace Installers.Project
 {
     public class ProjectInstaller : MonoInstaller
     {
-        [SerializeField] private CoroutineRunner _coroutineRunner;
+        [SerializeField] private CoroutineRunner coroutineRunner;
 
         public override void InstallBindings()
         {
@@ -18,10 +18,10 @@ namespace Installers.Project
         private void BindPrefabs()
         {
 #if UNITY_EDITOR
-            var parent = new GameObject("GameWorld").transform;
+            var parent = new GameObject("ProjectGameWorld").transform;
 #endif
 
-            BindPrefab(_coroutineRunner, parent);
+            BindPrefab(coroutineRunner, parent);
         }
 
         private void BindServices()

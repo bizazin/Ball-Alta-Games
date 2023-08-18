@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections;
-using Behaviours;
+using Scripts.ObjectPooling.Objects;
 using UnityEngine.SceneManagement;
 
 namespace Services.SceneLoading.Impls
