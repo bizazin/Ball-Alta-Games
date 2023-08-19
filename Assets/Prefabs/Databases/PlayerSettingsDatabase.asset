@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: PlayerSettingsDatabase
   m_EditorClassIdentifier: 
   playerSettings:
-    ReductionRate: 0.3
+    ReductionRate: 1
+    ThresholdPercentage: 0.05

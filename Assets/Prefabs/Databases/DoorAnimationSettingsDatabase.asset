@@ -13,6 +13,5 @@ MonoBehaviour:
   m_Name: DoorAnimationSettingsDatabase
   m_EditorClassIdentifier: 
   playerAnimationSettings:
-    DoorOpenDistanceM: 5
-    DoorOpenAngleDeg: 90
+    DoorOpenDistanceM: 15
     DoorOpenDurationS: 1

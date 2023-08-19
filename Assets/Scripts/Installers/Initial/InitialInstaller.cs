@@ -1,7 +1,7 @@
 ﻿using Scripts.Core;
 using Zenject;
 
-namespace Installers.Initial
+namespace Scripts.Installers.Initial
 {
     public class InitialInstaller : MonoInstaller
     {

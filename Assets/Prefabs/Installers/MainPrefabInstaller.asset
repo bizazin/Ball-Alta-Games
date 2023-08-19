@@ -17,6 +17,9 @@ MonoBehaviour:
   playerSettingsDatabase: {fileID: 11400000, guid: 9efb53755e8838245a6db035b9e4f65d, type: 2}
   playerAnimationSettingsDatabase: {fileID: 11400000, guid: 970aaffecab01c448a68d56bd739359d, type: 2}
   doorAnimationSettingsDatabase: {fileID: 11400000, guid: 39d220d90a07f7f4db79c2a8ad02f196, type: 2}
+  gameOutcomeDatabase: {fileID: 11400000, guid: 4640ea7bf474f0144a7160b36a945c14, type: 2}
+  canvas: {fileID: 7639541237202281361, guid: fff7a856e9f9b8d428286d79be151039, type: 3}
+  gameResultView: {fileID: 1111208492837510404, guid: c4678e7aab8d6f14eae1204738e32f9c, type: 3}
   projectileBehaviour: {fileID: 2465421777578042385, guid: 722c40b3f33930341aa6c48853e24933, type: 3}
   enemyBehaviour: {fileID: 8067493504517856481, guid: 12a54f5b6a4d5bc4bb56c46ec687d086, type: 3}
   mainSceneView: {fileID: 5695258761318886615, guid: 8a8c8a401565629479575e506c670ac7, type: 3}

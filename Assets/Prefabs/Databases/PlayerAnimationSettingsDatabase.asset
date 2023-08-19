@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: PlayerAnimationSettingsDatabase
   m_EditorClassIdentifier: 
   playerAnimationSettings:
-    PlayerJumpsCount: 4
-    JumpForce: 5
-    Gravity: -9.8
+    PlayerJumpsCount: 10
     JumpHeight: 2
+    JumpDurationS: 0.4

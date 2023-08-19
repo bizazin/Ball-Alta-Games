@@ -6,5 +6,6 @@ namespace Scripts.Models
     public class PlayerSettingsVo
     {
         public float ReductionRate;
+        public float ThresholdPercentage;
     }
 }

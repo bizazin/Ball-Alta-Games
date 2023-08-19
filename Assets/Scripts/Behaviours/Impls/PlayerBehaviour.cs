@@ -5,10 +5,11 @@ using UnityEngine;
 
 namespace Scripts.Behaviours.Impls
 {
-    [RequireComponent(typeof(Rigidbody))]
     public class PlayerBehaviour : LinkableBehaviour<PlayerEntity>, IPlayerScaleListener
     {
-        [SerializeField] private Rigidbody rigidbody;
+        [SerializeField] private LineRenderer playerPath;
+        
+        public void SetPathActive(bool isActive) => playerPath.enabled = isActive;
 
         public void OnPlayerScale(PlayerEntity entity, Vector3 value)
         {
@@ -18,8 +19,6 @@ namespace Scripts.Behaviours.Impls
             transform.localScale = value;
             transform.position += positionChange;
         }
-        
-        public void SetVelocity(Vector3 newVelocity) => rigidbody.velocity = newVelocity;
 
         protected override void Listen(PlayerEntity entity)
         {

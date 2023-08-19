@@ -6,6 +6,5 @@ namespace Scripts.Models
     public class DoorAnimationSettingsVo
     {
         public float DoorOpenDistanceM;
-        public float DoorOpenAngleDeg;
         public float DoorOpenDurationS;    }
 }

@@ -11,6 +11,7 @@ namespace Scripts.Ecs.Player.Utils
             
             entity.AddState(EPlayerState.ReadyForLoad);
             entity.AddPlayerScale(scale);
+            entity.AddPlayerMaxScale(scale);
             
             return entity;
         }

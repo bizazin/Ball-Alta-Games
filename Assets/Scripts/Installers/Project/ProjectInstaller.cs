@@ -3,7 +3,7 @@ using Scripts.Services.Impls;
 using UnityEngine;
 using Zenject;
 
-namespace Installers.Project
+namespace Scripts.Installers.Project
 {
     public class ProjectInstaller : MonoInstaller
     {

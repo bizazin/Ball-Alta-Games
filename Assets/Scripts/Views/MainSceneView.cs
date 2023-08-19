@@ -1,7 +1,8 @@
-﻿using Scripts.Core.Abstracts;
+﻿using Scripts.Behaviours.Impls;
+using Scripts.Core.Abstracts;
 using UnityEngine;
 
-namespace Scripts.Behaviours.Impls
+namespace Scripts.Views
 {
     public class MainSceneView : View
     {

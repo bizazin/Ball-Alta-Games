@@ -1,7 +1,10 @@
 ﻿using System.Collections;
+using DG.Tweening;
 using Scripts.Behaviours;
 using Scripts.Behaviours.Impls;
+using Scripts.Controllers;
 using Scripts.Databases;
+using Scripts.Enums;
 using UnityEngine;
 
 namespace Scripts.Services.Impls
@@ -11,58 +14,61 @@ namespace Scripts.Services.Impls
         private readonly ICoroutineRunner _coroutineRunner;
         private readonly IPlayerAnimationSettingsDatabase _playerAnimationSettingsDatabase;
         private readonly IDoorAnimationSettingsDatabase _doorAnimationSettingsDatabase;
+        private readonly IGameResultController _gameResultController;
 
         public VictoryAnimationService
         (
             ICoroutineRunner coroutineRunner,
             IPlayerAnimationSettingsDatabase playerAnimationSettingsDatabase,
-            IDoorAnimationSettingsDatabase doorAnimationSettingsDatabase
+            IDoorAnimationSettingsDatabase doorAnimationSettingsDatabase,
+            IGameResultController gameResultController
         )
         {
             _coroutineRunner = coroutineRunner;
             _playerAnimationSettingsDatabase = playerAnimationSettingsDatabase;
             _doorAnimationSettingsDatabase = doorAnimationSettingsDatabase;
+            _gameResultController = gameResultController;
         }
-
-        public void PlayVictoryAnimations(PlayerBehaviour player, DoorBehaviour door)
-        {
-            _coroutineRunner.StartCoroutine(JumpRoutine(player, door,
-                _playerAnimationSettingsDatabase.Settings.PlayerJumpsCount));
-        }
-
-        private IEnumerator JumpRoutine(PlayerBehaviour player, DoorBehaviour door, int numberOfJumps)
-        {
-            var start = player.transform.position;
-            var targetPoint = door.transform.position;
-            var distanceBetweenJumps = Vector3.Distance(start, targetPoint) / numberOfJumps;
-
-            for (var i = 0; i < numberOfJumps; i++)
+        
+            public void PlayVictoryAnimations(PlayerBehaviour player, DoorBehaviour door)
             {
-                var nextJumpTarget = Vector3.MoveTowards(start, targetPoint, distanceBetweenJumps * (i + 1));
-                var peakHeight = Mathf.Max(start.y, nextJumpTarget.y) +
-                                 _playerAnimationSettingsDatabase.Settings.JumpHeight;
+                var doorPos = door.transform.position;
+                var playerPos = player.transform.position;
+                var directionToDoor = (doorPos - playerPos).normalized;
+                var distance = Vector3.Distance(playerPos, doorPos);
+                var jumpDistance = distance / _playerAnimationSettingsDatabase.Settings.PlayerJumpsCount;
+                var initialY = playerPos.y;
+                var jumpSequence = DOTween.Sequence();
+                var isDoorOpened = false;
 
-                while (player.transform.position.y < peakHeight)
+                player.SetPathActive(false);
+                
+                for (var i = 0; i < _playerAnimationSettingsDatabase.Settings.PlayerJumpsCount; i++)
                 {
-                    player.SetVelocity(new Vector3(0, _playerAnimationSettingsDatabase.Settings.JumpForce, 0));
-                    yield return null;
+                    var midPoint = player.transform.position + directionToDoor * jumpDistance * (i + 1);
+                    midPoint.y += _playerAnimationSettingsDatabase.Settings.JumpHeight;
+
+                    jumpSequence
+                        .Append(player.transform.DOJump(midPoint, _playerAnimationSettingsDatabase.Settings.JumpHeight, 1, _playerAnimationSettingsDatabase.Settings.JumpDurationS).SetEase(Ease.OutQuad)
+                        .OnStepComplete(() =>
+                        {
+                            var currentDistance = Vector3.Distance(player.transform.position, door.transform.position);
+                            if (currentDistance <= _doorAnimationSettingsDatabase.Settings.DoorOpenDistanceM && !isDoorOpened)
+                            {
+                                door.Open(_doorAnimationSettingsDatabase.Settings.DoorOpenDurationS);
+                                isDoorOpened = true;
+                            }
+                        }));
                 }
 
-                while (player.transform.position.y > nextJumpTarget.y)
+                jumpSequence.OnComplete(() =>
                 {
-                    player.SetVelocity(new Vector3(0, _playerAnimationSettingsDatabase.Settings.Gravity, 0));
-                    yield return null;
-                }
-
-                player.transform.position = new Vector3(nextJumpTarget.x, nextJumpTarget.y, nextJumpTarget.z);
-            }
-
-            player.SetVelocity(Vector3.zero);
-
-            float distanceToDoor = Vector3.Distance(player.transform.position, targetPoint);
-            if (distanceToDoor < _doorAnimationSettingsDatabase.Settings.DoorOpenDistanceM)
-                door.Open(_doorAnimationSettingsDatabase.Settings.DoorOpenDurationS,
-                    _doorAnimationSettingsDatabase.Settings.DoorOpenAngleDeg);
+                    var finalPosition = door.transform.position;
+                    finalPosition.y = initialY; 
+                    player.transform.position = finalPosition;
+                    _gameResultController.SetResult(EGameResultType.Win);
+                });
+            
         }
     }
 }

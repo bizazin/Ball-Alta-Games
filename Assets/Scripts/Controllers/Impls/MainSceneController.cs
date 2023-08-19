@@ -1,11 +1,10 @@
-﻿using Scripts.Behaviours.Impls;
-using Scripts.Core.Abstracts;
+﻿using Scripts.Core.Abstracts;
 using Scripts.Ecs.Player.Utils;
 using Scripts.Extensions;
 using Scripts.ObjectPooling.Objects;
 using Scripts.ObjectPooling.Pools;
 using Scripts.Services;
-using UnityEngine;
+using Scripts.Views;
 using Zenject;
 
 namespace Scripts.Controllers.Impls

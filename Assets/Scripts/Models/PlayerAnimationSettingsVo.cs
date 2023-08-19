@@ -1,5 +1,4 @@
 using System;
-using DesperateDevs.Utils;
 
 namespace Scripts.Models
 {
@@ -7,8 +6,7 @@ namespace Scripts.Models
     public class PlayerAnimationSettingsVo
     {
         public int PlayerJumpsCount;
-        public float JumpForce;
-        public float Gravity;
         public float JumpHeight;
+        public float JumpDurationS;
     }
 }

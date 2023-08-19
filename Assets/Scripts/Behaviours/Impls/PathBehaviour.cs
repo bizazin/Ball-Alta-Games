@@ -14,24 +14,12 @@ namespace Scripts.Behaviours.Impls
             var hitColliders = Physics.OverlapBox(boxCenter, enemyDetectorCollider.size / 2, transform.rotation);
 
             foreach (Collider hitCollider in hitColliders)
-            {
                 if (hitCollider.GetComponent<EnemyBehaviour>() != null)
                     return true;
-            }
 
             return false;        
         }
         
-        private void OnDrawGizmosSelected()
-        {
-            if (enemyDetectorCollider == null)
-                enemyDetectorCollider = GetComponent<BoxCollider>();
-
-            Gizmos.color = Color.red;
-            Gizmos.matrix = Matrix4x4.TRS(transform.TransformPoint(enemyDetectorCollider.center), transform.rotation, transform.localScale);
-            Gizmos.DrawWireCube(Vector3.zero, enemyDetectorCollider.size);
-        }
-
         protected override void Listen(PlayerEntity entity)
         {
             entity.AddPlayerScaleListener(this);

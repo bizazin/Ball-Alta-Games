@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace Scripts.Ecs.Projectile.Systems
 {
-    public class EnemyHitSystem : ReactiveSystem<ProjectileEntity>
+    public class ProjectileEnemyHitSystem : ReactiveSystem<ProjectileEntity>
     {
         private readonly ProjectileContext _projectileContext;
         private readonly IProjectilePool _projectilePool;
@@ -20,7 +20,7 @@ namespace Scripts.Ecs.Projectile.Systems
         private readonly IProjectileTimeoutService _projectileTimeoutService;
         private readonly IMainSceneController _mainSceneController;
 
-        public EnemyHitSystem
+        public ProjectileEnemyHitSystem
         (
             ProjectileContext projectileContext,
             IProjectilePool projectilePool,
