@@ -14,6 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   projectileSettingsDatabase: {fileID: 11400000, guid: 3e3ea89a1c9c0404785487623a462761, type: 2}
   enemySettingsDatabase: {fileID: 11400000, guid: c60969156cc3b864a84522025bda7ffe, type: 2}
+  playerSettingsDatabase: {fileID: 11400000, guid: 9efb53755e8838245a6db035b9e4f65d, type: 2}
+  playerAnimationSettingsDatabase: {fileID: 11400000, guid: 970aaffecab01c448a68d56bd739359d, type: 2}
+  doorAnimationSettingsDatabase: {fileID: 11400000, guid: 39d220d90a07f7f4db79c2a8ad02f196, type: 2}
   projectileBehaviour: {fileID: 2465421777578042385, guid: 722c40b3f33930341aa6c48853e24933, type: 3}
   enemyBehaviour: {fileID: 8067493504517856481, guid: 12a54f5b6a4d5bc4bb56c46ec687d086, type: 3}
   mainSceneView: {fileID: 5695258761318886615, guid: 8a8c8a401565629479575e506c670ac7, type: 3}

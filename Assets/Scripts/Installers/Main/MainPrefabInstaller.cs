@@ -1,7 +1,10 @@
 ﻿using Scripts.Behaviours;
 using Scripts.Behaviours.Impls;
-using Scripts.Databases.Projectile;
-using Scripts.Databases.Projectile.Impls;
+using Scripts.Controllers;
+using Scripts.Controllers.Impls;
+using Scripts.Databases;
+using Scripts.Databases.Impls;
+using Scripts.Extensions;
 using Scripts.ObjectPooling.Objects;
 using Scripts.ObjectPooling.Pools;
 using Scripts.ObjectPooling.Pools.Impls;
@@ -16,6 +19,9 @@ namespace Scripts.Installers.Main
         [Header("Databases")]
         [SerializeField] private ProjectileSettingsDatabase projectileSettingsDatabase;
         [SerializeField] private EnemySettingsDatabase enemySettingsDatabase;
+        [SerializeField] private PlayerSettingsDatabase playerSettingsDatabase;
+        [SerializeField] private PlayerAnimationSettingsDatabase playerAnimationSettingsDatabase;
+        [SerializeField] private DoorAnimationSettingsDatabase doorAnimationSettingsDatabase;
 
         [Header("Prefabas")] 
         [SerializeField] private ProjectileBehaviour projectileBehaviour;
@@ -26,13 +32,16 @@ namespace Scripts.Installers.Main
         {
             BindDatabases();
             BindObjectPools();
-            BindPrefabs();
+            BindViews();
         }
 
         private void BindDatabases()
         {
             Container.Bind<IProjectileSettingsDatabase>().FromInstance(projectileSettingsDatabase).AsSingle();
             Container.Bind<IEnemySettingsDatabase>().FromInstance(enemySettingsDatabase).AsSingle();
+            Container.Bind<IPlayerSettingsDatabase>().FromInstance(playerSettingsDatabase).AsSingle();
+            Container.Bind<IPlayerAnimationSettingsDatabase>().FromInstance(playerAnimationSettingsDatabase).AsSingle();
+            Container.Bind<IDoorAnimationSettingsDatabase>().FromInstance(doorAnimationSettingsDatabase).AsSingle();
         }
 
         private void BindObjectPools()
@@ -41,12 +50,12 @@ namespace Scripts.Installers.Main
             BindPool<EnemyBehaviour, EnemyPool, IEnemyPool>(enemyBehaviour, 150);
         }
 
-        private void BindPrefabs()
+        private void BindViews()
         {
 #if UNITY_EDITOR
             var parent = new GameObject("GameWorld").transform;
 #endif
-            BindPrefab(mainSceneView, parent);
+            Container.BindView<MainSceneController, MainSceneView>(mainSceneView, parent);
         }
 
         private void BindPool<TItemContract, TPoolConcrete, TPoolContract>(TItemContract prefab, int size = 1)
@@ -66,16 +75,5 @@ namespace Scripts.Installers.Main
             
             
         }
-        
-        private void BindPrefab<TContent>(TContent prefab, Transform parent)
-            where TContent : Object =>
-            Container.BindInterfacesAndSelfTo<TContent>()
-                .FromComponentInNewPrefab(prefab)
-#if UNITY_EDITOR
-                .UnderTransform(parent)
-#endif
-                .AsSingle();
-
-
     }
 }

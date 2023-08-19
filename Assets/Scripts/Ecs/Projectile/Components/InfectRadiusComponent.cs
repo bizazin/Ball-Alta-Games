@@ -3,7 +3,7 @@ using Entitas.CodeGeneration.Attributes;
 
 namespace Scripts.Ecs.Projectile.Components
 {
-    [Projectile, Unique, Event(EventTarget.Self)]
+    [Projectile, Unique]
     public class InfectRadiusComponent : IComponent
     {
         public float Value;

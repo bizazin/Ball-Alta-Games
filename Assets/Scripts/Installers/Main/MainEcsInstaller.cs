@@ -1,6 +1,5 @@
 using Entitas;
 using Scripts.Ecs.Core;
-using Scripts.Ecs.Player.Systems;
 using Scripts.Ecs.Projectile.Systems;
 using Scripts.Extensions;
 using Zenject;
@@ -28,12 +27,17 @@ namespace Scripts.Installers.Main
 
         private void BindSystems()
         {
-            //Player
-            Container.BindInterfacesAndSelfTo<PlayerInitializeSystem>().AsSingle();
+            var contexts = Contexts.sharedInstance;
             
-            //Projectile
             Container.BindInterfacesAndSelfTo<ShootingSystem>().AsSingle();
             Container.BindInterfacesAndSelfTo<EnemyHitSystem>().AsSingle();
+            
+            Container.BindInstance(contexts).WhenInjectedInto<ProjectileEventSystems>();
+            Container.BindInterfacesAndSelfTo<ProjectileEventSystems>().AsSingle().NonLazy();
+            
+            Container.BindInstance(contexts).WhenInjectedInto<PlayerEventSystems>();
+            Container.BindInterfacesAndSelfTo<PlayerEventSystems>().AsSingle().NonLazy();
+
         }
 
         private void BindContextFromInstance<TContext>(TContext context)

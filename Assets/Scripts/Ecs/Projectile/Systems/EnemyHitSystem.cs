@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using Entitas;
 using Scripts.Behaviours;
+using Scripts.Controllers;
 using Scripts.Enums;
 using Scripts.Extensions;
 using Scripts.ObjectPooling.Objects;
 using Scripts.ObjectPooling.Pools;
-using Scripts.Services.ProjectileTimeout;
+using Scripts.Services;
 using UnityEngine;
 
 namespace Scripts.Ecs.Projectile.Systems
@@ -17,6 +18,7 @@ namespace Scripts.Ecs.Projectile.Systems
         private readonly IEnemyPool _enemyPool;
         private readonly PlayerContext _playerContext;
         private readonly IProjectileTimeoutService _projectileTimeoutService;
+        private readonly IMainSceneController _mainSceneController;
 
         public EnemyHitSystem
         (
@@ -24,7 +26,8 @@ namespace Scripts.Ecs.Projectile.Systems
             IProjectilePool projectilePool,
             IEnemyPool enemyPool,
             PlayerContext playerContext,
-            IProjectileTimeoutService projectileTimeoutService
+            IProjectileTimeoutService projectileTimeoutService,
+            IMainSceneController mainSceneController
         ) : base(projectileContext)
         {
             _projectileContext = projectileContext;
@@ -32,6 +35,7 @@ namespace Scripts.Ecs.Projectile.Systems
             _enemyPool = enemyPool;
             _playerContext = playerContext;
             _projectileTimeoutService = projectileTimeoutService;
+            _mainSceneController = mainSceneController;
         }
 
         protected override ICollector<ProjectileEntity> GetTrigger(IContext<ProjectileEntity> context) =>
@@ -56,6 +60,7 @@ namespace Scripts.Ecs.Projectile.Systems
                 _projectileTimeoutService.StopCoroutine();
                 _projectilePool.DespawnAndDeactivate();
                 projectileEntity.Destroy();
+                _mainSceneController.DetectEnemiesOnPath();
             }
         }
     }

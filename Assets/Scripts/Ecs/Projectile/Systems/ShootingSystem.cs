@@ -2,13 +2,14 @@
 using System.Collections;
 using Entitas;
 using Scripts.Behaviours;
-using Scripts.Databases.Projectile;
+using Scripts.Controllers;
+using Scripts.Databases;
 using Scripts.Ecs.Projectile.Utils;
 using Scripts.Enums;
 using Scripts.Extensions;
 using Scripts.ObjectPooling.Objects;
 using Scripts.ObjectPooling.Pools;
-using Scripts.Services.ProjectileTimeout;
+using Scripts.Services;
 using UnityEngine;
 using Zenject;
 
@@ -17,8 +18,9 @@ namespace Scripts.Ecs.Projectile.Systems
     public class ShootingSystem : IExecuteSystem, IInitializable
     {
         private readonly IProjectileSettingsDatabase _projectileSettingsDatabase;
+        private readonly IPlayerSettingsDatabase _playerSettingsDatabase;
         private readonly IProjectilePool _projectilePool;
-        private readonly IMainSceneView _mainSceneView;
+        private readonly IMainSceneController _mainSceneController;
         private readonly ProjectileContext _projectileContext;
         private readonly PlayerContext _playerContext;
         private readonly IProjectileTimeoutService _projectileTimeoutService;
@@ -30,16 +32,18 @@ namespace Scripts.Ecs.Projectile.Systems
         public ShootingSystem
         (
             IProjectileSettingsDatabase projectileSettingsDatabase,
+            IPlayerSettingsDatabase playerSettingsDatabase,
             IProjectilePool projectilePool,
-            IMainSceneView mainSceneView,
+            IMainSceneController mainSceneController,
             ProjectileContext projectileContext,
             PlayerContext playerContext,
             IProjectileTimeoutService projectileTimeoutService
         )
         {
             _projectileSettingsDatabase = projectileSettingsDatabase;
+            _playerSettingsDatabase = playerSettingsDatabase;
             _projectilePool = projectilePool;
-            _mainSceneView = mainSceneView;
+            _mainSceneController = mainSceneController;
             _projectileContext = projectileContext;
             _playerContext = playerContext;
             _projectileTimeoutService = projectileTimeoutService;
@@ -68,24 +72,24 @@ namespace Scripts.Ecs.Projectile.Systems
             if (_playerContext.state.Value == EPlayerState.ReadyForLoad)
             {
                 _playerContext.ReplaceState(EPlayerState.IncreaseProjectile);
-                _currentProjectile = _projectilePool.SpawnAndActivate(_mainSceneView.ProjectileSpawnPoint);
-                var currentProjectileTransform = _currentProjectile.transform;
-                currentProjectileTransform.position = _mainSceneView.ProjectileSpawnPoint.position;
-                _projectileEntity = _projectileContext.CreateProjectile(currentProjectileTransform.localScale.x *
-                                                                           _projectileSettingsDatabase.Settings
-                                                                               .InfectRadiusMultiplier);
+                _currentProjectile = _mainSceneController.SpawnProjectile();
+
+                var projectileLocalScale = _currentProjectile.transform.localScale;
+                _projectileEntity = _projectileContext.CreateProjectile(
+                    projectileLocalScale.x *
+                    _projectileSettingsDatabase.Settings.InfectRadiusMultiplier, projectileLocalScale);
                 _currentProjectile.Link(_projectileEntity, _projectileContext);
-                ShowLine();
+                _currentProjectile.ShowLine(GetPlaneIntersectionPoint());
             }
 
             _isDragging = true;
-            ShowLine();
+            _currentProjectile.ShowLine(GetPlaneIntersectionPoint());
         }
 
         private void HandleMouseDrag()
         {
             var currentTouchPosition = GetPlaneIntersectionPoint();
-            UpdateLine(currentTouchPosition);
+            _currentProjectile.UpdateLine(currentTouchPosition);
             GrowProjectile();
         }
 
@@ -97,19 +101,7 @@ namespace Scripts.Ecs.Projectile.Systems
             var releasePosition = GetPlaneIntersectionPoint();
             LaunchBall(releasePosition);
             _playerContext.ReplaceState(EPlayerState.ProjectileFlight);
-            _mainSceneView.SetShootLineActive(false);
-        }
-
-        private void ShowLine()
-        {
-            var touchPosition = GetPlaneIntersectionPoint();
-            var startPosition = _mainSceneView.ShootLine.GetPosition(0);
-
-            var position = _currentProjectile.transform.position;
-            _mainSceneView.ShootLine.SetPosition(0, new Vector3(position.x, startPosition.y, position.z));
-            _mainSceneView.ShootLine.SetPosition(1, new Vector3(touchPosition.x, startPosition.y, touchPosition.z));
-
-            _mainSceneView.SetShootLineActive(true);
+            _currentProjectile.SetShootLineActive(false);
         }
 
         private Vector3 GetPlaneIntersectionPoint()
@@ -122,18 +114,14 @@ namespace Scripts.Ecs.Projectile.Systems
             return Vector3.zero;
         }
 
-        private void UpdateLine(Vector3 intersectionPoint) => _mainSceneView.ShootLine.SetPosition(1,
-            new Vector3(intersectionPoint.x, _mainSceneView.ShootLine.GetPosition(0).y, intersectionPoint.z));
-
         private void GrowProjectile()
         {
-            var transform = _currentProjectile.transform;
-            var localScale = transform.localScale;
-            localScale += Vector3.one * _projectileSettingsDatabase.Settings.GrowRate * Time.deltaTime;
-            transform.localScale = localScale;
-            
-            _mainSceneView.ShootLine.startWidth = localScale.x;
-            _mainSceneView.ShootLine.endWidth = localScale.x;
+            _projectileEntity.ReplaceProjectileScale(_projectileEntity.projectileScale.Value +
+                                                     Vector3.one * _projectileSettingsDatabase.Settings.GrowRate *
+                                                     Time.deltaTime);
+            _playerContext.ReplacePlayerScale(_playerContext.playerScale.Value -
+                                              Vector3.one * _playerSettingsDatabase.Settings.ReductionRate *
+                                              Time.deltaTime);
         }
 
         private void LaunchBall(Vector3 releasePosition)
@@ -143,7 +131,7 @@ namespace Scripts.Ecs.Projectile.Systems
             _currentProjectile.Launch(direction * _projectileSettingsDatabase.Settings.LaunchForce);
             _projectileTimeoutService.StartCoroutine(ProjectileTimeout());
         }
-        
+
         private IEnumerator ProjectileTimeout()
         {
             var tempProjectile = _currentProjectile;
@@ -153,7 +141,7 @@ namespace Scripts.Ecs.Projectile.Systems
             {
                 _currentProjectile.Unlink();
                 _projectilePool.DespawnAndDeactivate();
-                _playerContext.ReplaceState(EPlayerState.ReadyForLoad); 
+                _playerContext.ReplaceState(EPlayerState.ReadyForLoad);
                 _projectileEntity.Destroy();
             }
         }

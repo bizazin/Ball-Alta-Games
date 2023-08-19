@@ -1,4 +1,4 @@
-using Scripts.Services.SceneLoading;
+using Scripts.Services;
 using Zenject;
 
 namespace Scripts.Core

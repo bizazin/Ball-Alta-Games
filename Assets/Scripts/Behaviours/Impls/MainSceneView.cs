@@ -1,17 +1,20 @@
-﻿using UnityEngine;
+﻿using Scripts.Core.Abstracts;
+using UnityEngine;
 
 namespace Scripts.Behaviours.Impls
 {
-    public class MainSceneView : MonoBehaviour, IMainSceneView
+    public class MainSceneView : View
     {
         [SerializeField] private Transform projectileSpawnPoint;
-        [SerializeField] private LineRenderer shootLine;
         [SerializeField] private Transform enemySpawnPoint;
+        [SerializeField] private PlayerBehaviour playerBehaviour;
+        [SerializeField] private DoorBehaviour doorBehaviour;
+        [SerializeField] private PathBehaviour pathBehaviour;
 
         public Transform ProjectileSpawnPoint => projectileSpawnPoint;
-        public LineRenderer ShootLine => shootLine;
         public Transform EnemySpawnPoint => enemySpawnPoint;
-        
-        public void SetShootLineActive(bool isActive) => shootLine.enabled = isActive;
+        public PlayerBehaviour PlayerBehaviour => playerBehaviour;
+        public DoorBehaviour DoorBehaviour => doorBehaviour;
+        public PathBehaviour PathBehaviour => pathBehaviour;
     }
 }
