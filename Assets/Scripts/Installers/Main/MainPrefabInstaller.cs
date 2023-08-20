@@ -62,9 +62,7 @@ namespace Scripts.Installers.Main
 
         private void BindViews()
         {
-#if UNITY_EDITOR
             var parent = new GameObject("GameWorld").transform;
-#endif
             Container.BindView<MainSceneController, MainSceneView>(mainSceneView, parent);
         }
 

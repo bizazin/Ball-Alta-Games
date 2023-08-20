@@ -17,9 +17,7 @@ namespace Scripts.Installers.Project
 
         private void BindPrefabs()
         {
-#if UNITY_EDITOR
             var parent = new GameObject("ProjectGameWorld").transform;
-#endif
 
             BindPrefab(coroutineRunner, parent);
         }
